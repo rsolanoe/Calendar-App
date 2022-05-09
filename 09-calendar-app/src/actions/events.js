@@ -1,26 +1,25 @@
-
-import { types } from '../types/types'
+import { types } from "../types/types";
 
 export const eventAddNew = (event) => ({
     type: types.eventAddNew,
-    payload: event
-})
+    payload: event,
+});
 
 export const setActive = (event) => ({
     type: types.eventSetActive,
-    payload: event
-})
+    payload: event,
+});
 
 export const eventClearActiveEvent = () => ({
-    type: types.eventClearActiveEvent
-})
+    type: types.eventClearActiveEvent,
+});
 
 export const eventUpdated = (event) => ({
     type: types.eventUpdated,
-    payload: event
-})
+    payload: event,
+});
 
 export const eventDeleted = (event) => ({
     type: types.eventDeleted,
-    payload: event
-})
+    payload: event,
+});

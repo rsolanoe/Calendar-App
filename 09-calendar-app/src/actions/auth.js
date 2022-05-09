@@ -51,7 +51,7 @@ export const startRegister = (email, password, name) => {
 export const startChecking = () => {
     return async (dispatch) => {
         try {
-            const resp = await fetchConToken("auth/renew",);
+            const resp = await fetchConToken("auth/renew");
             const body = await resp.json();
 
             if (body.ok) {
@@ -59,22 +59,22 @@ export const startChecking = () => {
                 localStorage.setItem("token-init-date", new Date().getTime());
                 dispatch(login({ uid: body.uid, name: body.name }));
             } else {
-                dispatch( checkingFinish() )
+                dispatch(checkingFinish());
             }
         } catch (error) {
             console.log(error);
         }
-    }
-}
+    };
+};
 
 export const startLogout = () => {
     return (dispatch) => {
         localStorage.clear();
-        dispatch(logout())
-    }
-}
+        dispatch(logout());
+    };
+};
 
-const checkingFinish = () => ({ type: types.authCheckingFinish })
+const checkingFinish = () => ({ type: types.authCheckingFinish });
 
 const login = (user) => ({
     type: types.authLogin,
@@ -82,5 +82,5 @@ const login = (user) => ({
 });
 
 const logout = () => ({
-    type: types.authLogout
-})
+    type: types.authLogout,
+});
