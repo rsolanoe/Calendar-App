@@ -7,7 +7,11 @@ import Swal from "sweetalert2";
 import "sweetalert2/src/sweetalert2.scss";
 import { useDispatch, useSelector } from "react-redux";
 import { uiCloseModal } from "../../actions/ui";
-import { eventClearActiveEvent, eventStartAddNew, eventUpdated } from "../../actions/events";
+import {
+    eventClearActiveEvent,
+    eventStartAddNew,
+    eventUpdated,
+} from "../../actions/events";
 
 const customStyles = {
     content: {
@@ -30,7 +34,7 @@ const initEvent = {
     notes: "",
     start: now.toDate(),
     end: nowPlus1.toDate(),
-}
+};
 
 /* INICIO */
 const CalendarModal = () => {
@@ -38,19 +42,31 @@ const CalendarModal = () => {
     const { activeEvent } = useSelector((state) => state.calendar);
     const dispatch = useDispatch();
 
-    const [dateStart, setDateStart] = useState(now.toDate());
-    const [dateEnd, setDateEnd] = useState(nowPlus1.toDate());
-    const [titleValid, setTitleValid] = useState(true);
+    useEffect(() => {
+        if (activeEvent) {
+            setFormValues(activeEvent);
+        } else {
+            setFormValues(initEvent);
+        }
+    }, [activeEvent]);
 
-    const [formValues, setFormValues] = useState(initEvent);
+    //const [dateStart, setDateStart] = useState(now.toDate()); ///13
+    //const [dateEnd, setDateEnd] = useState(nowPlus1.toDate()); ///14
+    const [titleValid, setTitleValid] = useState(true); ///15
+
+    const [formValues, setFormValues] = useState(initEvent); ///16
 
     const { title, notes, start, end } = formValues;
 
     useEffect(() => {
-        activeEvent ? setFormValues(activeEvent) : setFormValues(initEvent);;
-    }, [activeEvent]);
+        setFormValues({
+            ...formValues,
+            end: start,
+        });
+    }, [start]);
 
     const handleInputChange = ({ target }) => {
+        console.log('hic');
         setFormValues({
             ...formValues,
             [target.name]: target.value,
@@ -78,8 +94,7 @@ const CalendarModal = () => {
         if (activeEvent) {
             dispatch(eventUpdated(formValues));
         } else {
-            dispatch(
-                eventStartAddNew(formValues));
+            dispatch(eventStartAddNew(formValues));
         }
 
         setTitleValid(true);
@@ -90,18 +105,27 @@ const CalendarModal = () => {
         console.log("closing...");
         dispatch(uiCloseModal());
         dispatch(eventClearActiveEvent());
+        //handleResetDate()
     };
 
-    const handleStartDateChange = (e) => {
-        setDateStart(e);
+    const handleResetDate = () => {
+        setFormValues(initEvent);
+        setDateStart(now.toDate());
+        setDateEnd(nowPlus1.toDate());
+    };
+
+    const handleStartDateChange = (e) => { //TODO CHANGES HEREEEEEEEE
+       // console.log(e);
+       // setDateStart(e);
         setFormValues({
             ...formValues,
             start: e,
         });
     };
 
-    const handleEndDateChange = (e) => {
-        setDateEnd(e);
+    const handleEndDateChange = (e) => { //TODO CHANGES HEREEEEEEEE
+       // console.log(e);
+       // setDateEnd(e);
         setFormValues({
             ...formValues,
             end: e,
@@ -118,7 +142,7 @@ const CalendarModal = () => {
             overlayClassName="modal-fondo"
             closeTimeoutMS={200}
         >
-            <h1> {activeEvent ? 'Editar evento' : 'Nuevo evento'} </h1>
+            <h1> {activeEvent ? "Editar evento" : "Nuevo evento"} </h1>
             <hr />
             <form onSubmit={handleSubmitForm} className="container">
                 <div className="form-group">
@@ -126,7 +150,7 @@ const CalendarModal = () => {
                     <DateTimePicker
                         className="form-control"
                         onChange={handleStartDateChange}
-                        value={dateStart}
+                        value={start} //TODO EDITANTOOOOOOOO
                     />
                 </div>
 
@@ -135,8 +159,8 @@ const CalendarModal = () => {
                     <DateTimePicker
                         className="form-control"
                         onChange={handleEndDateChange}
-                        value={dateEnd}
-                        minDate={dateStart}
+                        value={end}
+                        //minDate={start}
                     />
                 </div>
 
